@@ -32,9 +32,44 @@ function copyDir(src, dest) {
 }
 
 try {
-  // Mover assets a la raíz primero
-  console.log('📁 Moviendo assets a la raíz...');
-  execSync('node move-assets.js', { stdio: 'inherit' });
+  // Verificar estructura de carpetas
+  console.log('🔍 Verificando estructura de carpetas...');
+  console.log('📂 Contenido del directorio actual:');
+  const currentFiles = readdirSync('.');
+  console.log(currentFiles);
+  
+  // Verificar si public/ existe
+  if (existsSync('public')) {
+    console.log('✅ Carpeta public/ encontrada');
+    console.log('📂 Contenido de public/:');
+    const publicFiles = readdirSync('public');
+    console.log(publicFiles);
+  } else {
+    console.log('⚠️ Carpeta public/ no encontrada, buscando alternativas...');
+    
+    // Buscar en subdirectorios
+    const subdirs = currentFiles.filter(file => {
+      const stat = statSync(file);
+      return stat.isDirectory() && file !== 'node_modules' && file !== 'dist';
+    });
+    
+    console.log('📂 Subdirectorios encontrados:', subdirs);
+    
+    for (const dir of subdirs) {
+      if (existsSync(`${dir}/public`)) {
+        console.log(`✅ Encontrada carpeta public/ en ${dir}/`);
+        // Copiar public/ a la raíz
+        copyDir(`${dir}/public`, 'public');
+        break;
+      }
+    }
+  }
+  
+  // Mover assets a la raíz si public/ existe
+  if (existsSync('public')) {
+    console.log('📁 Moviendo assets a la raíz...');
+    execSync('node move-assets.js', { stdio: 'inherit' });
+  }
   
   // Ejecutar el build optimizado para Vercel
   console.log('📦 Ejecutando npm run build:vercel...');
@@ -47,19 +82,20 @@ try {
     const publicFiles = readdirSync('public');
     console.log(publicFiles);
     
-    // Usar comando PowerShell directamente
+    // Usar método Node.js directamente (más confiable en Vercel)
     try {
-      console.log('🔄 Copiando con PowerShell...');
-      execSync('Copy-Item "public/*" "dist/" -Recurse -Force', { stdio: 'inherit', shell: 'powershell' });
-      console.log('✅ Archivos copiados con PowerShell');
-    } catch (psError) {
-      console.log('⚠️ PowerShell falló, intentando con método Node.js...');
+      copyDir('public', 'dist');
+      console.log('✅ Archivos copiados con Node.js');
+    } catch (nodeError) {
+      console.log('⚠️ Método Node.js falló, intentando con comandos del sistema...');
       try {
-        copyDir('public', 'dist');
-        console.log('✅ Archivos copiados con Node.js');
-      } catch (nodeError) {
-        console.log('⚠️ Método Node.js falló, intentando con shell script...');
-        execSync('chmod +x copy-assets.sh && ./copy-assets.sh', { stdio: 'inherit' });
+        // Intentar con comando Unix (Vercel usa Linux)
+        execSync('cp -r public/* dist/', { stdio: 'inherit' });
+        console.log('✅ Archivos copiados con cp');
+      } catch (cpError) {
+        console.log('⚠️ Comando cp falló, intentando con PowerShell...');
+        execSync('Copy-Item "public/*" "dist/" -Recurse -Force', { stdio: 'inherit', shell: 'powershell' });
+        console.log('✅ Archivos copiados con PowerShell');
       }
     }
     
@@ -74,7 +110,7 @@ try {
       console.log(`🖼️ Logo existe en dist: ${logoExists}`);
     }
   } else {
-    console.log('⚠️ Carpeta public/ no encontrada');
+    console.log('⚠️ Carpeta public/ no encontrada después de búsqueda');
   }
   
   // Verificar archivos en la raíz
