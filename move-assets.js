@@ -12,11 +12,11 @@ try {
     const publicFiles = readdirSync('public');
     console.log(publicFiles);
     
-    // Copiar archivos individuales a la raíz
+    // Copiar archivos individuales a la raíz usando PowerShell
     for (const file of publicFiles) {
       if (file !== 'pasaporte') { // Excluir carpeta pasaporte por ahora
         try {
-          execSync(`cp public/${file} .`, { stdio: 'inherit' });
+          execSync(`Copy-Item "public/${file}" "." -Force`, { stdio: 'inherit', shell: 'powershell' });
           console.log(`✅ ${file} copiado a la raíz`);
         } catch (error) {
           console.log(`⚠️ Error copiando ${file}:`, error.message);
@@ -26,7 +26,7 @@ try {
     
     // Copiar carpeta pasaporte
     if (existsSync('public/pasaporte')) {
-      execSync('cp -r public/pasaporte .', { stdio: 'inherit' });
+      execSync('Copy-Item "public/pasaporte" "." -Recurse -Force', { stdio: 'inherit', shell: 'powershell' });
       console.log('✅ Carpeta pasaporte copiada a la raíz');
     }
     

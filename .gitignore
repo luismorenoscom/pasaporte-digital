@@ -69,7 +69,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Storybook build outputs
 .out
@@ -104,3 +103,14 @@ docker-compose.override.yml
 
 # Vercel
 .vercel
+
+# Build artifacts (archivos copiados durante el build)
+assets-fondo1.png
+assets-fondo4.png
+logo-infinity-stores.png
+logo-ironman-pasaporte.png
+GettyImages-1226358300.mp4
+intro.mp4
+video1.mp4
+logo.svg
+vite.svg

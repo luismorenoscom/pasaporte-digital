@@ -47,13 +47,13 @@ try {
     const publicFiles = readdirSync('public');
     console.log(publicFiles);
     
-    // Usar comando cp directamente
+    // Usar comando PowerShell directamente
     try {
-      console.log('🔄 Copiando con comando cp...');
-      execSync('cp -r public/* dist/', { stdio: 'inherit' });
-      console.log('✅ Archivos copiados con cp');
-    } catch (cpError) {
-      console.log('⚠️ Comando cp falló, intentando con método Node.js...');
+      console.log('🔄 Copiando con PowerShell...');
+      execSync('Copy-Item "public/*" "dist/" -Recurse -Force', { stdio: 'inherit', shell: 'powershell' });
+      console.log('✅ Archivos copiados con PowerShell');
+    } catch (psError) {
+      console.log('⚠️ PowerShell falló, intentando con método Node.js...');
       try {
         copyDir('public', 'dist');
         console.log('✅ Archivos copiados con Node.js');
