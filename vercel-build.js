@@ -32,37 +32,56 @@ function copyDir(src, dest) {
 }
 
 try {
+  // Mover assets a la raíz primero
+  console.log('📁 Moviendo assets a la raíz...');
+  execSync('node move-assets.js', { stdio: 'inherit' });
+  
   // Ejecutar el build optimizado para Vercel
   console.log('📦 Ejecutando npm run build:vercel...');
   execSync('npm run build:vercel', { stdio: 'inherit' });
   
-  // Copiar archivos de public/ a dist/
-  console.log('📁 Copiando archivos estáticos...');
+  // Copiar archivos de public/ a dist/ también
+  console.log('📁 Copiando archivos estáticos a dist...');
   if (existsSync('public')) {
     console.log('📂 Contenido de public/:');
     const publicFiles = readdirSync('public');
     console.log(publicFiles);
     
-    // Intentar con comando de shell primero
+    // Usar comando cp directamente
     try {
-      console.log('🔄 Intentando con comando de shell...');
-      execSync('chmod +x copy-assets.sh && ./copy-assets.sh', { stdio: 'inherit' });
-    } catch (shellError) {
-      console.log('⚠️ Comando de shell falló, usando método Node.js...');
-      copyDir('public', 'dist');
+      console.log('🔄 Copiando con comando cp...');
+      execSync('cp -r public/* dist/', { stdio: 'inherit' });
+      console.log('✅ Archivos copiados con cp');
+    } catch (cpError) {
+      console.log('⚠️ Comando cp falló, intentando con método Node.js...');
+      try {
+        copyDir('public', 'dist');
+        console.log('✅ Archivos copiados con Node.js');
+      } catch (nodeError) {
+        console.log('⚠️ Método Node.js falló, intentando con shell script...');
+        execSync('chmod +x copy-assets.sh && ./copy-assets.sh', { stdio: 'inherit' });
+      }
     }
-    
-    console.log('✅ Archivos de public/ copiados a dist/');
     
     // Verificar que se copiaron
     if (existsSync('dist')) {
       console.log('📂 Contenido de dist/ después de copiar:');
       const distFiles = readdirSync('dist');
       console.log(distFiles);
+      
+      // Verificar archivos específicos
+      const logoExists = existsSync('dist/logo-infinity-stores.png');
+      console.log(`🖼️ Logo existe en dist: ${logoExists}`);
     }
   } else {
     console.log('⚠️ Carpeta public/ no encontrada');
   }
+  
+  // Verificar archivos en la raíz
+  console.log('📂 Verificando archivos en la raíz:');
+  const rootFiles = readdirSync('.');
+  const logoInRoot = rootFiles.includes('logo-infinity-stores.png');
+  console.log(`🖼️ Logo existe en raíz: ${logoInRoot}`);
   
   console.log('✅ Build completado exitosamente');
 } catch (error) {
