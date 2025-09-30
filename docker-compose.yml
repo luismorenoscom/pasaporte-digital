@@ -47,6 +47,11 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://pasaporte_user:pasaporte_password@postgres:5432/pasaporte_db
+      DB_HOST: postgres
+      DB_USER: pasaporte_user
+      DB_NAME: pasaporte_db
+      DB_PASSWORD: pasaporte_password
+      DB_PORT: 5432
       PORT: 3001
     ports:
       - "3001:3001"

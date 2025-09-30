@@ -63,7 +63,7 @@ export default function VideoBackground() {
           console.log('Video error code:', e.currentTarget.error?.code);
         }}
       >
-        <source src="/GettyImages-1226358300.mp4" type="video/mp4" />
+        <source src="/getty-images-1226358300.mp4" type="video/mp4" />
       </video>
       
       {/* Overlay dinámico que se reduce en hover */}

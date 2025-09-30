@@ -21,7 +21,7 @@ export default function PassportCanvas({
       {/* Fondo del mapa */}
       <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
         <img
-          src="/assets-fondo22.png"
+          src="/pasaporte/fondo/background-space.png"
           alt="Mapa del Multiverso"
           className="w-full h-full object-cover"
         />
