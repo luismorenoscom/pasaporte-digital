@@ -1,0 +1,70 @@
+@import '@fontsource/orbitron/400.css';
+@import '@fontsource/orbitron/700.css';
+@import '@fontsource/orbitron/900.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+html, body { margin: 0; }
+
+/* Prevenir scroll horizontal */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Tipografía y efectos para labels del mapa */
+.label-iron {
+  font-family: 'Orbitron', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: .08em !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  /* Contorno para legibilidad sobre nebulosa */
+  -webkit-text-stroke: .6px rgba(0,0,0,.85) !important;
+  text-shadow:
+    0 0 1px rgba(0,0,0,.35),
+    0 0 6px rgba(0,0,0,.25) !important;
+}
+
+/* Encendida (dorado) */
+.label-on {
+  color: #FFD34D !important;
+  text-shadow:
+    0 0 1px rgba(0,0,0,.35),
+    0 0 8px rgba(255,211,77,.35),
+    0 0 16px rgba(255,211,77,.18) !important;
+}
+
+/* Apagada (gris) */
+.label-off {
+  color: rgba(230,232,236,.92) !important;
+  opacity: .68 !important;
+  -webkit-text-stroke: .6px rgba(0,0,0,.7) !important;
+}
+
+/* Estilos para selects en modo oscuro */
+select {
+  color-scheme: dark !important;
+}
+
+select option {
+  background-color: #1f2937 !important;
+  color: white !important;
+}
+
+select:disabled {
+  color-scheme: dark !important;
+}
+
+select:disabled option {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
