@@ -138,7 +138,7 @@ export default function Header() {
                     console.log("Cerrando sesión...");
                     setShowProfileMenu(false);
                     logout();
-                    window.location.href = "/auth";
+                    navigate("/auth");
                   }}
                   className="w-full px-4 py-2 text-left text-white hover:bg-white/10 transition-colors flex items-center space-x-2"
                 >
@@ -199,7 +199,7 @@ export default function Header() {
                     console.log("Cerrando sesión...");
                     setShowMobileMenu(false);
                     logout();
-                    window.location.href = "/auth";
+                    navigate("/auth");
                   }}
                   className="w-full px-4 py-3 text-left text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors flex items-center space-x-2"
                 >

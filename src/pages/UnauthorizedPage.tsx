@@ -59,7 +59,7 @@ export default function UnauthorizedPage() {
             <button
               onClick={() => {
                 logout();
-                window.location.href = "/auth";
+                navigate("/auth");
               }}
               className="px-8 py-3 bg-[#fdd742] text-black font-bold rounded-xl hover:bg-[#ff6b35] transition-colors"
             >

@@ -16,12 +16,12 @@
       "dest": "/backend/src/server.js"
     },
     {
-      "src": "/(.*\\.(png|jpg|jpeg|gif|svg|mp4|webp))",
+      "src": "/(.*\\.(png|jpg|jpeg|gif|svg|mp4|webp|woff2|ttf|otf))",
       "dest": "/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/index.html"
     }
   ],
   "env": {
