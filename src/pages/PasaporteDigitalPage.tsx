@@ -116,7 +116,6 @@ export default function PasaporteDigitalPage() {
                     isUnlocked={isUnlocked}
                     points={points}
                     level={level}
-                    icon={station.iconBase || '⚡'}
                     stationType={station.type}
                     stationIcon={station.stationIcon}
                     vsIcon={station.vsIcon}

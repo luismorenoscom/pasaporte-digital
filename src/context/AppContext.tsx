@@ -1,4 +1,5 @@
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { User } from '../features/pasaporte/types';
 
 // Definición de roles del sistema
@@ -113,7 +114,7 @@ interface AppProviderProps {
 }
 
 export function AppProvider({ children }: AppProviderProps) {
-  const [user, setUser] = React.useState<UserProfile | null>(() => {
+  const [user, setUser] = useState<UserProfile | null>(() => {
     // Inicializar el estado directamente desde localStorage
     try {
       const savedUser = localStorage.getItem('currentUser');
@@ -122,7 +123,7 @@ export function AppProvider({ children }: AppProviderProps) {
       return null;
     }
   });
-  const [currentUserRole, setCurrentUserRole] = React.useState<UserRole | null>(() => {
+  const [currentUserRole, setCurrentUserRole] = useState<UserRole | null>(() => {
     // Inicializar el rol directamente desde localStorage
     try {
       const savedRole = localStorage.getItem('currentUserRole');
@@ -131,7 +132,7 @@ export function AppProvider({ children }: AppProviderProps) {
       return null;
     }
   });
-  const [isInitialized, setIsInitialized] = React.useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Marcar como inicializado después del primer render
   useEffect(() => {

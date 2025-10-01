@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Station } from '../types';
 import { getStationStatusText } from '../icons';

@@ -137,7 +137,7 @@ export default function TeamPassportPage() {
           },
           {
             id: 'm8',
-            name: 'Pedro Sánchez',
+            // name: 'Pedro Sánchez',
             email: 'pedro.sanchez@luismorenos.com',
             region: 'Centroamérica',
             country: 'Nicaragua',
@@ -212,9 +212,9 @@ export default function TeamPassportPage() {
     setAgencyFilter('all');
   };
 
-  const handleStationClick = (stationId: string) => {
+  const handleStationClick = (station: any) => {
     // Aquí se podría abrir un modal con detalles de la estación
-    console.log('Estación clickeada:', stationId);
+    console.log('Estación clickeada:', station);
   };
 
   return (

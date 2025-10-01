@@ -1,9 +1,10 @@
-import React from "react";
 import Header from "../components/Header";
 import { useApp } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 export default function UnauthorizedPage() {
   const { user, logout } = useApp();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full text-white">
@@ -36,7 +37,7 @@ export default function UnauthorizedPage() {
               <div className="space-y-2 text-left">
                 <div>
                   <span className="text-gray-400">Usuario:</span>
-                  <span className="text-white ml-2">{user?.name}</span>
+                  <span className="text-white ml-2">{user?.email}</span>
                 </div>
                 <div>
                   <span className="text-gray-400">Email:</span>

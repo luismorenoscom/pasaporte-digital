@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Station } from '../types';
 import { getStationState } from '../icons';
 import StationNode from './StationNode';

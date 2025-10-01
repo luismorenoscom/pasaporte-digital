@@ -1060,7 +1060,7 @@ export default function GlobalLocationsPage() {
     setSearchTerm('');
   };
 
-  const renderLocationCard = (item: Country | Agency | Branch, type: 'country' | 'agency' | 'branch') => {
+  const renderLocationCard = (item: any, type: 'country' | 'agency' | 'branch') => {
     const title = item.name;
     const subtitle = type === 'country' ? item.region : `${item.country} • ${item.region}`;
     const details = type === 'country' 

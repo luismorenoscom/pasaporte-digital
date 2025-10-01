@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import StationIcon from './StationIcons';
 
@@ -10,7 +9,6 @@ interface MinimalStationCardProps {
   isUnlocked: boolean;
   points: number;
   level: number;
-  icon: string;
   stationType: 'station' | 'boss';
   stationIcon?: string;
   vsIcon?: string;
@@ -25,7 +23,6 @@ export default function MinimalStationCard({
   isUnlocked,
   points,
   level,
-  icon,
   stationType,
   stationIcon,
   vsIcon,
