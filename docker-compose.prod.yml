@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: pasaporte_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pasaporte_db
+      POSTGRES_USER: pasaporte_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pasaporte_secure_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - pasaporte_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pasaporte_user -d pasaporte_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pasaporte_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: pasaporte_db
+      DB_USER: pasaporte_user
+      DB_PASSWORD: ${DB_PASSWORD:-pasaporte_secure_password}
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_here}
+      JWT_EXPIRES_IN: 24h
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pasaporte_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: pasaporte_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dist:/var/www/pasaporte/dist
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+    networks:
+      - pasaporte_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  pasaporte_network:
+    driver: bridge
