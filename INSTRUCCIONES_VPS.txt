@@ -1,0 +1,123 @@
+🚀 INSTRUCCIONES PARA CONFIGURAR EL VPS
+==========================================
+
+📋 DATOS DEL VPS:
+- IP: 72.60.167.122
+- Usuario: root
+- Contraseña: X5v)bhC0,tZ8,r&WrAaS
+- Dominio: ironman.embluegroup.com.pa
+
+🔧 PASOS PARA CONFIGURAR:
+
+1. CONECTAR AL VPS:
+   ssh root@72.60.167.122
+   Contraseña: X5v)bhC0,tZ8,r&WrAaS
+
+2. ACTUALIZAR SISTEMA:
+   apt-get update
+   apt-get upgrade -y
+
+3. INSTALAR SERVICIOS BÁSICOS:
+   apt-get install -y nginx nodejs npm postgresql postgresql-contrib curl
+
+4. CONFIGURAR POSTGRESQL:
+   systemctl start postgresql
+   systemctl enable postgresql
+   sudo -u postgres psql -c "CREATE USER pasaporte_user WITH PASSWORD 'pasaporte_password';"
+   sudo -u postgres psql -c "CREATE DATABASE pasaporte_db OWNER pasaporte_user;"
+
+5. CREAR DIRECTORIO DEL DOMINIO:
+   mkdir -p /var/www/ironman.embluegroup.com.pa
+   chown -R www-data:www-data /var/www/ironman.embluegroup.com.pa
+   chmod -R 755 /var/www/ironman.embluegroup.com.pa
+
+6. CREAR PÁGINA DE PRUEBA:
+   echo '<h1>🚀 Pasaporte Digital - Funcionando!</h1>' > /var/www/ironman.embluegroup.com.pa/index.html
+
+7. CONFIGURAR NGINX:
+   cat > /etc/nginx/sites-available/ironman.embluegroup.com.pa << 'EOF'
+   server {
+       listen 80;
+       server_name ironman.embluegroup.com.pa;
+       
+       root /var/www/ironman.embluegroup.com.pa;
+       index index.html;
+       
+       location / {
+           try_files $uri $uri/ =404;
+       }
+   }
+   EOF
+
+8. HABILITAR SITIO:
+   ln -sf /etc/nginx/sites-available/ironman.embluegroup.com.pa /etc/nginx/sites-enabled/
+   rm -f /etc/nginx/sites-enabled/default
+
+9. VERIFICAR Y REINICIAR NGINX:
+   nginx -t
+   systemctl restart nginx
+   systemctl enable nginx
+
+10. CONFIGURAR FIREWALL:
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+    ufw allow 22/tcp
+    ufw --force enable
+
+11. VERIFICAR ESTADO FINAL:
+    systemctl status nginx
+    netstat -tlnp | grep :80
+    curl http://localhost
+    curl http://ironman.embluegroup.com.pa
+
+📤 SUBIR PROYECTO COMPLETO:
+
+Una vez que la página de prueba funcione, ejecutar desde tu máquina local:
+
+1. SUBIR FRONTEND:
+   scp -r ./dist/* root@72.60.167.122:/var/www/ironman.embluegroup.com.pa/
+
+2. SUBIR BACKEND:
+   scp -r ./backend root@72.60.167.122:/opt/pasaporte-backend/
+
+3. CONFIGURAR BACKEND EN EL VPS:
+   cd /opt/pasaporte-backend
+   npm install --production
+   
+   # Crear archivo .env
+   cat > .env << 'EOF'
+   NODE_ENV=production
+   PORT=3001
+   DATABASE_URL=postgresql://pasaporte_user:pasaporte_password@localhost:5432/pasaporte_db
+   JWT_SECRET=tu_jwt_secret_muy_seguro_para_produccion
+   FRONTEND_URL=https://ironman.embluegroup.com.pa
+   EOF
+
+4. CONFIGURAR NGINX PARA BACKEND:
+   # Editar /etc/nginx/sites-available/ironman.embluegroup.com.pa
+   # Agregar esta sección dentro del server block:
+   location /api/ {
+       proxy_pass http://localhost:3001/api/;
+       proxy_set_header Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+   }
+
+5. INICIAR BACKEND CON PM2:
+   npm install -g pm2
+   pm2 start src/server.js --name pasaporte-backend
+   pm2 save
+   pm2 startup
+
+6. REINICIAR NGINX:
+   systemctl reload nginx
+
+🌐 RESULTADO FINAL:
+- Frontend: https://ironman.embluegroup.com.pa
+- Backend API: https://ironman.embluegroup.com.pa/api
+- Health Check: https://ironman.embluegroup.com.pa/api/health
+
+🔑 CREDENCIALES:
+- Email: admin@pasaporte.com
+- Contraseña: admin123
+
