@@ -11,7 +11,11 @@
   ],
   "routes": [
     {
-      "src": "/(.*\\.(png|jpg|jpeg|gif|svg|mp4|webp|woff2|ttf|otf))",
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*\\.(js|mjs|css|png|jpg|jpeg|gif|svg|mp4|webp|woff2|ttf|otf))",
       "dest": "/$1"
     },
     {
